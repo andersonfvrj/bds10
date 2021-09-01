@@ -2,12 +2,12 @@ import './styles.css';
 import { AxiosRequestConfig } from 'axios';
 import { useHistory } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
-import { useEffect, useState } from 'react';
 import { Employee } from 'types/employee';
 import Select from 'react-select';
 import { Department } from 'types/department';
 import { requestBackend } from 'util/requests';
 import { toast } from 'react-toastify';
+//import { getDepartmentsResponse } from '../__tests__/fixtures';
 
 const Form = () => {
 
@@ -28,8 +28,6 @@ const Form = () => {
 
   const history = useHistory();
 
-  const [selectDepartments, setSelectDepartments] = useState<Department[]>([]);
-
   const {
     register,
     handleSubmit,
@@ -39,16 +37,18 @@ const Form = () => {
 
   const onSubmit = (formData: Employee) => {
 
+    console.log(formData);
+
     const config: AxiosRequestConfig = {
       method: 'POST',
-      url: '/employee',
+      url: '/employees',
       data: formData,
       withCredentials: true,
     };
 
     requestBackend(config)
     .then(() => {
-      toast.info('Funcionário cadastrado com sucesso');
+      toast.info('Cadastrado com sucesso');
       history.push('/admin/employees');
     })
     .catch(() => {
@@ -120,7 +120,6 @@ const Form = () => {
                       {...field}
                       options={getDepartmentsResponse}
                       classNamePrefix="employee-crud-select"
-                      isMulti
                       getOptionLabel={(department: Department) => department.name}
                       getOptionValue={(department: Department) => String(department.id)}
                       inputId="department"
